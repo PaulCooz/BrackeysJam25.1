@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Code
+namespace JamSpace
 {
     /// <summary>
     /// Fit by any dimension and expand by the other, work now only for Orthographic

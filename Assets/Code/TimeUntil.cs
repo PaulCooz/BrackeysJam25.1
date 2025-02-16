@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace Code
+namespace JamSpace
 {
     /// <summary>
     /// A convenience struct to easily manage a time countdown, based on <see cref="P:Sandbox.Time.Now" />.<br />

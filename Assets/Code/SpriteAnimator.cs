@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Code
+namespace JamSpace
 {
     [RequireComponent(typeof(SpriteRenderer))]
     public sealed class SpriteAnimator : MonoBehaviour

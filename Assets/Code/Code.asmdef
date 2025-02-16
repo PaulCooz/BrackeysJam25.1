@@ -1,8 +1,9 @@
 {
     "name": "Code",
-    "rootNamespace": "",
+    "rootNamespace": "JamSpace",
     "references": [
-        "GUID:6ce24a611d7bd2c4a8c63d4cc0b19d17"
+        "GUID:6ce24a611d7bd2c4a8c63d4cc0b19d17",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
