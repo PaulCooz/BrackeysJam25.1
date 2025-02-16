@@ -227,6 +227,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7311691472895655797}
+  - component: {fileID: 3524822729818637778}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -251,3 +252,99 @@ Transform:
   - {fileID: 6413945145080279640}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3524822729818637778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3737296930912498971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 948f5a8486184cb6b8500a34c98949e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 0.25
+  moveLeftInput:
+    m_Name: Move Left Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: f1b105f0-0e6b-4ce4-8fca-9f2318a720ec
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 404d71cc-4243-481e-8162-1fe5adc3004e
+      m_Path: <Keyboard>/a
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Left Input
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 29c708d9-8e1a-48c4-b848-aa83f5cf1618
+      m_Path: <Keyboard>/leftArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Left Input
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 32b223b4-31e3-496f-9c23-48d6a0cc19e8
+      m_Path: <Keyboard>/numpad4
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Left Input
+      m_Flags: 0
+    m_Flags: 0
+  moveRightInput:
+    m_Name: Move Right Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: eead2ab2-c68c-418a-81cf-38a787a1da27
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 5233c6d0-081b-4dd1-a9c3-adea795a6a8d
+      m_Path: <Keyboard>/d
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Right Input
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 3071d810-f779-485f-8acc-41c3a67d83cb
+      m_Path: <Keyboard>/rightArrow
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Right Input
+      m_Flags: 0
+    - m_Name: 
+      m_Id: 38b34301-bc88-45bc-8f2b-eb16a1341e75
+      m_Path: <Keyboard>/numpad6
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Move Right Input
+      m_Flags: 0
+    m_Flags: 0
+  fishingInput:
+    m_Name: Fishing Input
+    m_Type: 0
+    m_ExpectedControlType: 
+    m_Id: daf53b92-776b-4412-ad15-06bb720881d1
+    m_Processors: 
+    m_Interactions: 
+    m_SingletonActionBindings:
+    - m_Name: 
+      m_Id: 7d3b50ea-5b9d-483c-a88f-293470a25b24
+      m_Path: <Keyboard>/space
+      m_Interactions: 
+      m_Processors: 
+      m_Groups: 
+      m_Action: Fishing Input
+      m_Flags: 0
+    m_Flags: 0
