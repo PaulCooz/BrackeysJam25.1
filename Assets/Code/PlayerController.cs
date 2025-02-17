@@ -25,8 +25,12 @@ namespace JamSpace
 
         private UniTask? _currentTask;
 
+        private FishingMechanics _fishingMechanics;
+
         private void Awake()
         {
+            _fishingMechanics = FindFirstObjectByType<FishingMechanics>();
+
             moveLeftInput.Enable();
             moveRightInput.Enable();
             fishingInput.Enable();
@@ -47,7 +51,7 @@ namespace JamSpace
             }
             if (fishingInput.WasPerformedThisFrame())
             {
-                Debug.Log("FISHING");
+                _currentTask = _fishingMechanics.Run(() => fishingInput.WasPerformedThisFrame());
             }
         }
 

@@ -1,4 +1,3 @@
-using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,39 +7,33 @@ namespace JamSpace
     public class FishingSectorView : MonoBehaviour
     {
         [SerializeField] private LayoutElement layoutElement;
-        [SerializeField] private TextMeshProUGUI label;
+        [SerializeField] public TextMeshProUGUI label;
         [SerializeField] private Image background;
         [SerializeField] private Color backgroundNoPointColor;
         [SerializeField] private Color backgroundPositiveColor;
         [SerializeField] private Color backgroundNegativeColor;
-        
-        private Action _onCatch;
 
-        public void Initialize(int weight, int pointsToAdd, Action onCatch)
+        public int PointsToAdd { get; private set; }
+
+        public void Initialize(int weight, int pointsToAdd)
         {
-            _onCatch = onCatch;
-            
+            PointsToAdd = pointsToAdd;
+
             layoutElement.flexibleWidth = weight;
-            
-            var isNoPoints = pointsToAdd == 0;
-            var labelText = isNoPoints ? string.Empty : pointsToAdd.ToString();
-            
-            label.text = labelText;
-            
-            label.gameObject.SetActive(!string.IsNullOrEmpty(labelText));
-            
-            background.color = isNoPoints 
-                ? backgroundNoPointColor 
-                : pointsToAdd > 0 
-                    ? backgroundPositiveColor 
-                    : backgroundNegativeColor;
-            
-            gameObject.SetActive(true);
-        }
 
-        public void Catch()
-        {
-            _onCatch?.Invoke();
+            var isNoPoints = PointsToAdd == 0;
+            var labelText  = isNoPoints ? string.Empty : PointsToAdd.ToString();
+
+            label.text = labelText;
+            label.gameObject.SetActive(!string.IsNullOrEmpty(labelText));
+
+            background.color = isNoPoints
+                ? backgroundNoPointColor
+                : PointsToAdd > 0
+                    ? backgroundPositiveColor
+                    : backgroundNegativeColor;
+
+            gameObject.SetActive(true);
         }
     }
 }
