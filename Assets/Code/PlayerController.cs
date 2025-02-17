@@ -21,14 +21,20 @@ namespace JamSpace
         [SerializeField]
         private InputAction fishingInput;
 
-        public int GridX => Mathf.RoundToInt(transform.position.x / StepLength);
+        public Vector2Int GridPos => new (
+            Mathf.RoundToInt(transform.position.x / StepLength),
+            Mathf.RoundToInt(transform.position.y / StepLength)
+        );
+        public int GridX => GridPos.x;
 
         private UniTask? _currentTask;
 
+        private Camera           _camera;
         private FishingMechanics _fishingMechanics;
 
         private void Awake()
         {
+            _camera           = FindFirstObjectByType<Camera>();
             _fishingMechanics = FindFirstObjectByType<FishingMechanics>();
 
             moveLeftInput.Enable();
@@ -41,30 +47,53 @@ namespace JamSpace
             if (_currentTask.HasValue && !_currentTask.Value.Status.IsCompleted())
                 return;
 
+            var mouse         = Mouse.current;
+            var worldClickPos = (Vector3?)null;
+            if (mouse.leftButton.wasReleasedThisFrame)
+                worldClickPos = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
+
+            var wasFishingAsClick = false;
+            var moveStep          = (int?)null;
+            if (worldClickPos.HasValue)
+            {
+                var clickGridPos = new Vector2Int(
+                    Mathf.RoundToInt(worldClickPos.Value.x / StepLength),
+                    Mathf.RoundToInt(worldClickPos.Value.y / StepLength)
+                );
+                if (clickGridPos.y is 0)
+                {
+                    wasFishingAsClick = clickGridPos == GridPos;
+                    if (!wasFishingAsClick)
+                        moveStep = clickGridPos.x - GridPos.x;
+                }
+            }
             if (moveLeftInput.WasPerformedThisFrame())
-            {
-                _currentTask = MoveAsync(-StepLength);
-            }
+                moveStep = -1;
             if (moveRightInput.WasPerformedThisFrame())
+                moveStep = +1;
+
+            if (moveStep.HasValue)
             {
-                _currentTask = MoveAsync(+StepLength);
+                _currentTask = MoveAsync(moveStep.Value);
             }
-            if (fishingInput.WasPerformedThisFrame())
+            if (wasFishingAsClick || fishingInput.WasPerformedThisFrame())
             {
-                _currentTask = _fishingMechanics.Run(() => fishingInput.WasPerformedThisFrame());
+                _currentTask = _fishingMechanics
+                    .Run(() => fishingInput.WasPerformedThisFrame() || mouse.leftButton.wasReleasedThisFrame);
             }
         }
 
         private UniTask MoveAsync(float step)
         {
-            const float endX = (CountOfSteps - 1) * StepLength / 2f;
+            const float endX = (CountOfSteps - 1) / 2f;
 
-            var currentX = GridX * StepLength;
+            var currentX = GridX;
             if (currentX + step > endX)
                 step = endX - currentX;
             if (currentX + step < -endX)
                 step = -endX - currentX;
 
+            step *= StepLength;
             return step is not 0
                 ? transform.DOMoveX(transform.position.x + step, Math.Abs(step) * speed).ToUniTask()
                 : UniTask.CompletedTask;
