@@ -106,6 +106,9 @@ namespace JamSpace
                         seq.Append(fishSprite.transform.DOMove(spline.EvaluatePosition(t), caughtAnimDur * (fly * step)));
                     seq.Append(fishSprite.transform.DOScale(0, caughtAnimDur * hide));
 
+                    GameManager.Instance.Data.FishCount += result.PointsToAdd;
+                    GameManager.Instance.Post<ICaughtFish>(l => l.PlayerCaughtFish(result));
+
                     spriteAnimator.defaultState = "idle";
                     return spriteAnimator.Play("caught", false);
                 });
@@ -126,6 +129,11 @@ namespace JamSpace
             return step is not 0
                 ? transform.DOMoveX(transform.position.x + step, Math.Abs(step) * speed).ToUniTask()
                 : UniTask.CompletedTask;
+        }
+
+        public interface ICaughtFish
+        {
+            void PlayerCaughtFish(FishingResult result);
         }
     }
 }
