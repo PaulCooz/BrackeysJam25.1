@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Splines;
 
 namespace JamSpace
 {
@@ -24,6 +25,11 @@ namespace JamSpace
         [SerializeField]
         private StateSpriteAnimator spriteAnimator;
 
+        [SerializeField]
+        private SpriteRenderer fishSprite;
+        [SerializeField]
+        private SplineContainer spline;
+
         public Vector2Int GridPos => new (
             Mathf.RoundToInt(transform.position.x / StepLength),
             Mathf.RoundToInt(transform.position.y / StepLength)
@@ -39,6 +45,8 @@ namespace JamSpace
         {
             _camera           = FindFirstObjectByType<Camera>();
             _fishingMechanics = FindFirstObjectByType<FishingMechanics>();
+
+            fishSprite.transform.localScale = Vector3.zero;
 
             moveLeftInput.Enable();
             moveRightInput.Enable();
@@ -83,12 +91,21 @@ namespace JamSpace
             {
                 spriteAnimator.Play("casting", false).Forget();
                 spriteAnimator.defaultState = "waiting";
+                var castingAnimDur = spriteAnimator.GetDuration("casting");
+                var caughtAnimDur  = spriteAnimator.GetDuration("caught");
                 _currentTask = _fishingMechanics.Run(
-                    spriteAnimator.GetDuration("casting"),
-                    spriteAnimator.GetDuration("caught"),
+                    castingAnimDur, caughtAnimDur,
                     () => fishingInput.WasPerformedThisFrame() || mouse.leftButton.wasReleasedThisFrame
                 ).ContinueWith(result =>
                 {
+                    const float show = 0.1f, fly = 0.8f, hide = 0.1f, step = 0.1f;
+
+                    var seq = DOTween.Sequence();
+                    seq.Append(fishSprite.transform.DOScale(1, caughtAnimDur * show));
+                    for (var t = 0f; t <= 1f; t += step)
+                        seq.Append(fishSprite.transform.DOMove(spline.EvaluatePosition(t), caughtAnimDur * (fly * step)));
+                    seq.Append(fishSprite.transform.DOScale(0, caughtAnimDur * hide));
+
                     spriteAnimator.defaultState = "idle";
                     return spriteAnimator.Play("caught", false);
                 });

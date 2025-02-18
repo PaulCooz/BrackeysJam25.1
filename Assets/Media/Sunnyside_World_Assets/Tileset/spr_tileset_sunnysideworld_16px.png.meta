@@ -14027,7 +14027,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: spr_tileset_sunnysideworld_16px_642
+      name: fish
       rect:
         serializedVersion: 2
         x: 176
@@ -20970,6 +20970,7 @@ TextureImporter:
       01_water_ground_25: 226323520
       01_water_ground_26: -364603446
       01_water_ground_27: 347901339
+      fish: 1168122432
       spr_tileset_sunnysideworld_16px_0: -545796861
       spr_tileset_sunnysideworld_16px_1: -429377813
       spr_tileset_sunnysideworld_16px_10: 551435214
@@ -21538,7 +21539,6 @@ TextureImporter:
       spr_tileset_sunnysideworld_16px_639: 1480790128
       spr_tileset_sunnysideworld_16px_640: -1081875336
       spr_tileset_sunnysideworld_16px_641: 455289297
-      spr_tileset_sunnysideworld_16px_642: 1168122432
       spr_tileset_sunnysideworld_16px_643: -1304481038
       spr_tileset_sunnysideworld_16px_644: -1284376124
       spr_tileset_sunnysideworld_16px_645: 766340686
