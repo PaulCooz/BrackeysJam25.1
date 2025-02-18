@@ -21,6 +21,9 @@ namespace JamSpace
         [SerializeField]
         private InputAction fishingInput;
 
+        [SerializeField]
+        private StateSpriteAnimator spriteAnimator;
+
         public Vector2Int GridPos => new (
             Mathf.RoundToInt(transform.position.x / StepLength),
             Mathf.RoundToInt(transform.position.y / StepLength)
@@ -78,8 +81,17 @@ namespace JamSpace
             }
             if (wasFishingAsClick || fishingInput.WasPerformedThisFrame())
             {
-                _currentTask = _fishingMechanics
-                    .Run(() => fishingInput.WasPerformedThisFrame() || mouse.leftButton.wasReleasedThisFrame);
+                spriteAnimator.Play("casting", false).Forget();
+                spriteAnimator.defaultState = "waiting";
+                _currentTask = _fishingMechanics.Run(
+                    spriteAnimator.GetDuration("casting"),
+                    spriteAnimator.GetDuration("caught"),
+                    () => fishingInput.WasPerformedThisFrame() || mouse.leftButton.wasReleasedThisFrame
+                ).ContinueWith(result =>
+                {
+                    spriteAnimator.defaultState = "idle";
+                    return spriteAnimator.Play("caught", false);
+                });
             }
         }
 

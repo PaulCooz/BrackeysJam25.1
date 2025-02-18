@@ -35,12 +35,12 @@ namespace JamSpace
             _markerCurrentDirection = Vector2.right;
         }
 
-        public async UniTask<FishingResult> Run(Func<bool> catchSector)
+        public async UniTask<FishingResult> Run(float fadeInDur, float fadeOutDur, Func<bool> catchSector)
         {
             var (speed, sectors) = GetRandomSpeedAndSectors();
             Setup(speed, sectors);
 
-            await canvasGroup.DOFade(1, 0.3f).OnComplete(() => canvasGroup.blocksRaycasts = true);
+            await canvasGroup.DOFade(1, fadeInDur).OnComplete(() => canvasGroup.blocksRaycasts = true);
 
             var currentSector = _sectorInstances.First();
             do
@@ -68,8 +68,11 @@ namespace JamSpace
                 }
             } while (!catchSector());
 
-            await canvasGroup.DOFade(0, 0.3f).OnComplete(() => canvasGroup.blocksRaycasts = false);
-            Reset();
+            canvasGroup
+                .DOFade(0, fadeOutDur)
+                .OnComplete(() => canvasGroup.blocksRaycasts = false)
+                .ToUniTask()
+                .Forget();
 
             return new FishingResult(currentSector.PointsToAdd);
         }
