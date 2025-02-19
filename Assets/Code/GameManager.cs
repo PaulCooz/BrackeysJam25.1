@@ -53,6 +53,23 @@ namespace JamSpace
         {
             void GameStart();
         }
+
+        public interface ILevelFinish
+        {
+            void LevelFinish(LevelResult result);
+        }
+
+        public readonly struct LevelResult
+        {
+            public readonly bool IsWin;
+            public readonly int  Level;
+
+            public LevelResult(bool isWin, int level)
+            {
+                IsWin = isWin;
+                Level = level;
+            }
+        }
     }
 
     public sealed class GameData
@@ -69,7 +86,12 @@ namespace JamSpace
             set => PlayerPrefs.SetInt("level", value);
         }
 
-        public int FishCount     { get; set; }
+        private int _fishCount;
+        public int FishCount
+        {
+            get => _fishCount;
+            set => _fishCount = Math.Clamp(value, 0, FishToCollect);
+        }
         public int FishToCollect { get; set; }
     }
 }

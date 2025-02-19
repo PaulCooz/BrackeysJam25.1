@@ -3,35 +3,12 @@
 namespace JamSpace
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    public sealed class SpriteAnimator : MonoBehaviour
+    public sealed class SpriteAnimator : BaseSpriteAnimator
     {
-        [SerializeField]
-        private Sprite[] sprites;
-        [SerializeField]
-        private float delay = 0.1f;
-        [SerializeField]
-        private int startFrom = 0;
-
-        private int       _currentSprite;
-        private TimeUntil _nextSprite;
-
         private SpriteRenderer _renderer;
 
-        private void Awake()
-        {
-            _renderer      = GetComponent<SpriteRenderer>();
-            _currentSprite = startFrom;
-            _nextSprite    = delay;
-        }
+        public override void OnAwake() => _renderer = GetComponent<SpriteRenderer>();
 
-        private void Update()
-        {
-            if (_nextSprite)
-            {
-                _currentSprite   = (_currentSprite + 1) % sprites.Length;
-                _renderer.sprite = sprites[_currentSprite];
-                _nextSprite      = delay;
-            }
-        }
+        public override void OnSetSprite(Sprite sprite) => _renderer.sprite = sprite;
     }
 }

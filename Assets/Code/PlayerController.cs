@@ -125,7 +125,7 @@ namespace JamSpace
 
         public interface ICaughtFish
         {
-            void PlayerCaughtFish(FishingResult result);
+            void PlayerCaughtFish(FishingResult fishResult);
         }
     }
 }
