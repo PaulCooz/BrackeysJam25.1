@@ -10,6 +10,9 @@ namespace JamSpace
     {
         private List<LevelSettings> _levels;
 
+        [SerializeField]
+        public Rect gameWorldRect;
+
         public GameData Data { get; private set; }
 
         private static GameManager _instance;

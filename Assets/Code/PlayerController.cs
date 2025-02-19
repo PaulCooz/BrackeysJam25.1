@@ -9,9 +9,6 @@ namespace JamSpace
 {
     public sealed class PlayerController : MonoBehaviour
     {
-        private const float StepLength   = 4f;
-        private const int   CountOfSteps = 5;
-
         [SerializeField]
         private float speed = 0.25f;
 
@@ -29,12 +26,6 @@ namespace JamSpace
         private SpriteRenderer fishSprite;
         [SerializeField]
         private SplineContainer spline;
-
-        public Vector2Int GridPos => new (
-            Mathf.RoundToInt(transform.position.x / StepLength),
-            Mathf.RoundToInt(transform.position.y / StepLength)
-        );
-        public int GridX => GridPos.x;
 
         private UniTask? _currentTask;
 
@@ -58,35 +49,29 @@ namespace JamSpace
             if (_currentTask.HasValue && !_currentTask.Value.Status.IsCompleted())
                 return;
 
-            var mouse         = Mouse.current;
-            var worldClickPos = (Vector3?)null;
-            if (mouse.leftButton.wasReleasedThisFrame)
-                worldClickPos = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
-
+            var mouse             = Mouse.current;
+            var worldClickPos     = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
             var wasFishingAsClick = false;
-            var moveStep          = (int?)null;
-            if (worldClickPos.HasValue)
-            {
-                var clickGridPos = new Vector2Int(
-                    Mathf.RoundToInt(worldClickPos.Value.x / StepLength),
-                    Mathf.RoundToInt(worldClickPos.Value.y / StepLength)
-                );
-                if (clickGridPos.y is 0)
-                {
-                    wasFishingAsClick = clickGridPos == GridPos;
-                    if (!wasFishingAsClick)
-                        moveStep = clickGridPos.x - GridPos.x;
-                }
-            }
-            if (moveLeftInput.WasPerformedThisFrame())
-                moveStep = -1;
-            if (moveRightInput.WasPerformedThisFrame())
-                moveStep = +1;
+            var moveDirection     = (float?)null;
+            if (mouse.leftButton.wasReleasedThisFrame)
+                wasFishingAsClick = worldClickPos.DistXY(transform.position) < 1.5f;
+            else if (mouse.leftButton.isPressed)
+                moveDirection = Math.Clamp(worldClickPos.x - transform.position.x, -1, +1);
 
-            if (moveStep.HasValue)
+            if (moveLeftInput.IsPressed())
+                moveDirection = -1;
+            if (moveRightInput.IsPressed())
+                moveDirection = +1;
+            if (moveDirection.HasValue)
             {
-                _currentTask = MoveAsync(moveStep.Value);
+                var bounds = GameManager.Instance.gameWorldRect;
+                var pos    = transform.position;
+                pos.x += speed * moveDirection.Value * Time.deltaTime;
+                pos.x =  Mathf.Clamp(pos.x, bounds.xMin, bounds.xMax);
+
+                transform.position = pos;
             }
+
             if (wasFishingAsClick || fishingInput.WasPerformedThisFrame())
             {
                 spriteAnimator.Play("casting", false).Forget();
@@ -113,22 +98,6 @@ namespace JamSpace
                     return spriteAnimator.Play("caught", false);
                 });
             }
-        }
-
-        private UniTask MoveAsync(float step)
-        {
-            const float endX = (CountOfSteps - 1) / 2f;
-
-            var currentX = GridX;
-            if (currentX + step > endX)
-                step = endX - currentX;
-            if (currentX + step < -endX)
-                step = -endX - currentX;
-
-            step *= StepLength;
-            return step is not 0
-                ? transform.DOMoveX(transform.position.x + step, Math.Abs(step) * speed).ToUniTask()
-                : UniTask.CompletedTask;
         }
 
         public interface ICaughtFish

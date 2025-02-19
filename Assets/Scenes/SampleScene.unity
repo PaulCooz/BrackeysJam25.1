@@ -1032,6 +1032,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d63fd9f43ee74999b9d86b69bec54594, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameWorldRect:
+    serializedVersion: 2
+    x: -8
+    y: -2
+    width: 16
+    height: 4
 --- !u!1001 &4387991705898545516
 PrefabInstance:
   m_ObjectHideFlags: 0
