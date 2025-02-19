@@ -24,5 +24,12 @@ namespace JamSpace
         public static float Sqr(float a) => a * a;
 
         public static float DistXY(this Vector3 a, Vector3 b) => Mathf.Sqrt(Sqr(a.x - b.x) + Sqr(a.y - b.y));
+
+        public static Color WithA(this Color c, float alpha)
+        {
+            var n = c;
+            n.a = alpha;
+            return n;
+        }
     }
 }

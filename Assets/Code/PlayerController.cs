@@ -23,11 +23,14 @@ namespace JamSpace
         private StateSpriteAnimator spriteAnimator;
 
         [SerializeField]
+        private SpriteRenderer boatSprite;
+        [SerializeField]
         private SpriteRenderer fishSprite;
         [SerializeField]
         private SplineContainer spline;
 
         private UniTask? _currentTask;
+        private bool     _clickBeginOnPlayer;
 
         private Camera           _camera;
         private FishingMechanics _fishingMechanics;
@@ -49,14 +52,34 @@ namespace JamSpace
             if (_currentTask.HasValue && !_currentTask.Value.Status.IsCompleted())
                 return;
 
-            var mouse             = Mouse.current;
-            var worldClickPos     = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
-            var wasFishingAsClick = false;
-            var moveDirection     = (float?)null;
-            if (mouse.leftButton.wasReleasedThisFrame)
-                wasFishingAsClick = worldClickPos.DistXY(transform.position) < 1.5f;
-            else if (mouse.leftButton.isPressed)
+
+            var mouse                 = Mouse.current;
+            var worldClickPos         = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
+            var wasFishingAsClick     = false;
+            var moveDirection         = (float?)null;
+            var distFromClickToPlayer = worldClickPos.DistXY(transform.position);
+            if (distFromClickToPlayer < 1.5f) // input on player
+            {
+                if (mouse.leftButton.wasPressedThisFrame)
+                {
+                    _clickBeginOnPlayer = true;
+                    boatSprite.DOKill();
+                    boatSprite.DOColor((0.7f * Color.white).WithA(1f), 0.3f);
+                }
+                if (mouse.leftButton.wasReleasedThisFrame)
+                    wasFishingAsClick = _clickBeginOnPlayer;
+            }
+            if (!_clickBeginOnPlayer && mouse.leftButton.isPressed)
                 moveDirection = Math.Clamp(worldClickPos.x - transform.position.x, -1, +1);
+            if (mouse.leftButton.wasReleasedThisFrame)
+            {
+                if (_clickBeginOnPlayer)
+                {
+                    boatSprite.DOKill();
+                    boatSprite.DOColor(Color.white, 0.3f);
+                }
+                _clickBeginOnPlayer = false;
+            }
 
             if (moveLeftInput.IsPressed())
                 moveDirection = -1;

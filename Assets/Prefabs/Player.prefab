@@ -5443,5 +5443,6 @@ MonoBehaviour:
       m_Flags: 0
     m_Flags: 0
   spriteAnimator: {fileID: 6577873007128951366}
+  boatSprite: {fileID: 8267054415739566158}
   fishSprite: {fileID: 5353707855606546062}
   spline: {fileID: 2125308972531225019}
