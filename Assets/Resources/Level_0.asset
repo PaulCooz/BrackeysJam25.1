@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: Level_0
   m_EditorClassIdentifier: 
   fishToCollect: 3
+  timerMinutes: 2

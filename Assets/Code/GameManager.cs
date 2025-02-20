@@ -13,7 +13,8 @@ namespace JamSpace
         [SerializeField]
         public Rect gameWorldRect;
 
-        public GameData Data { get; private set; }
+        public bool     Running { get; private set; }
+        public GameData Data    { get; private set; }
 
         private static GameManager _instance;
         public static  GameManager Instance => _instance ??= FindAnyObjectByType<GameManager>();
@@ -32,7 +33,18 @@ namespace JamSpace
             Data = new GameData();
             Data.Setup(_levels[Data.Level]);
 
+            Running = true;
             Post<IGameStart>(l => l.GameStart());
+        }
+
+        public void Finish(bool isWin)
+        {
+            if (!Running)
+                return;
+            Running = false;
+
+            var levelResult = new LevelResult(isWin, Data.Level);
+            Post<ILevelFinish>(l => l.LevelFinish(levelResult));
         }
 
         public void Post<T>(Action<T> action)
@@ -78,6 +90,8 @@ namespace JamSpace
         {
             FishCount     = 0;
             FishToCollect = settings.fishToCollect;
+
+            TimerToGameOver = TimeSpan.FromMinutes(settings.timerMinutes);
         }
 
         public int Level
@@ -93,5 +107,12 @@ namespace JamSpace
             set => _fishCount = Math.Clamp(value, 0, FishToCollect);
         }
         public int FishToCollect { get; set; }
+
+        private TimeSpan _timerToGameOver;
+        public TimeSpan TimerToGameOver
+        {
+            get => _timerToGameOver;
+            set => _timerToGameOver = value < TimeSpan.Zero ? TimeSpan.Zero : value;
+        }
     }
 }

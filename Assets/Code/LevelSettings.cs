@@ -7,5 +7,7 @@ namespace JamSpace
     {
         [SerializeField]
         public int fishToCollect;
+        [SerializeField]
+        public double timerMinutes;
     }
 }
