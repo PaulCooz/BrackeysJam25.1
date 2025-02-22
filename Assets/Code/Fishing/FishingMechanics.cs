@@ -18,6 +18,9 @@ namespace JamSpace
         private FishingSectorView sectorPrefab;
         [SerializeField]
         private CanvasGroup canvasGroup;
+        [SerializeField] 
+        private AudioSource reelingSound, wooshSound, waterSplash;
+        
 
         private readonly List<FishingSectorView> _sectorInstances = new ();
 
@@ -46,8 +49,13 @@ namespace JamSpace
         {
             var (speed, sectors) = GetRandomSpeedAndSectors();
             Setup(speed, sectors);
+            
+            wooshSound.Play();
+            DOVirtual.DelayedCall(0.5f, () => waterSplash.Play());
 
             await canvasGroup.DOFade(1, fadeInDur).OnComplete(() => canvasGroup.blocksRaycasts = true);
+            
+            reelingSound.Play();
 
             var currentSector = _sectorInstances.First();
             do
@@ -99,7 +107,7 @@ namespace JamSpace
                     manager.PostOrdered<PlayerController.IChangeSpeed>(l => l.PlayerChangeSpeed(currentSector.Info.Value));
                     break;
             }
-
+            reelingSound.Stop();
             return currentSector.Info;
         }
 
