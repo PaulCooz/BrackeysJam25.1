@@ -33,7 +33,6 @@ namespace JamSpace
         private SplineContainer spline;
 
         private UniTask? _currentTask;
-        private bool     _isControlActive;
         private bool     _clickBeginOnPlayer;
         private bool     _insideFishZone;
 
@@ -54,21 +53,19 @@ namespace JamSpace
             fishingInput.Enable();
         }
         
-        
         void GameManager.IGameStart.GameStart()
         {
-            _isControlActive = true;
-            CurrentSpeed    = speed;
+            CurrentSpeed = speed;
         }
 
         private void Update()
         {
-            if (!_isControlActive)
+            var manager = GameManager.Instance;
+            if (!manager.Running)
                 return;
             
             if (_currentTask.HasValue && !_currentTask.Value.Status.IsCompleted())
                 return;
-
 
             var mouse                 = Mouse.current;
             var worldClickPos         = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
@@ -104,7 +101,7 @@ namespace JamSpace
                 moveDirection = +1;
             if (moveDirection.HasValue)
             {
-                var bounds = GameManager.Instance.gameWorldRect;
+                var bounds = manager.gameWorldRect;
                 var pos    = transform.position;
                 pos.x += CurrentSpeed * moveDirection.Value * Time.deltaTime;
                 pos.x =  Mathf.Clamp(pos.x, bounds.xMin, bounds.xMax);
@@ -120,9 +117,15 @@ namespace JamSpace
                 var caughtAnimDur  = spriteAnimator.GetDuration("caught");
                 _currentTask = _fishingMechanics.Run(
                     castingAnimDur, caughtAnimDur,
-                    () => fishingInput.WasPerformedThisFrame() || mouse.leftButton.wasReleasedThisFrame
+                    () => fishingInput.WasPerformedThisFrame() || mouse.leftButton.wasReleasedThisFrame || !manager.Running
                 ).ContinueWith(() =>
                 {
+                    if (!manager.Running)
+                    {
+                        spriteAnimator.defaultState = "idle";
+                        return UniTask.CompletedTask;
+                    }
+
                     const float show = 0.1f, fly = 0.8f, hide = 0.1f, step = 0.1f;
 
                     var seq = DOTween.Sequence();
@@ -160,8 +163,6 @@ namespace JamSpace
 
         private async UniTaskVoid OnDamageAsync()
         {
-            _isControlActive = false;
-
             await DOTween.Sequence()
                 .Join(boatSprite.DOColor(Color.red, 0.1f).SetLoops(6, LoopType.Yoyo))
                 .Join(humanSprite.DOColor(Color.red, 0.1f).SetLoops(6, LoopType.Yoyo));

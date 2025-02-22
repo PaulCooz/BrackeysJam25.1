@@ -1,17 +1,21 @@
 ﻿using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 
 namespace JamSpace
 {
-    public sealed class TimerSystem : MonoBehaviour, GameManager.IGameStart
+    public sealed class TimerSystem : MonoBehaviour, GameManager.IGameStart, GameManager.ILevelFinish, GameManager.ILevelReplay
     {
         [SerializeField]
         private TMP_Text tmp;
 
+        private CancellationTokenSource _cancel;
+
         public void GameStart()
         {
+            _cancel = new CancellationTokenSource();
             StartTimer().Forget();
         }
 
@@ -19,12 +23,12 @@ namespace JamSpace
         {
             var gameManager = GameManager.Instance;
             var data        = gameManager.Data;
-            while (this.IsAlive())
+            while (!_cancel.IsCancellationRequested && this.IsAlive())
             {
                 var span = data.TimerToGameOver;
                 tmp.text = $"{span.Minutes}:{span.Seconds}";
 
-                await UniTask.NextFrame();
+                await UniTask.NextFrame(cancellationToken: _cancel.Token);
 
                 span =  data.TimerToGameOver;
                 span -= TimeSpan.FromSeconds(Time.deltaTime);
@@ -35,6 +39,11 @@ namespace JamSpace
                     gameManager.Finish(false);
                 }
             }
+            _cancel = null;
         }
+
+        public void LevelFinish(GameManager.LevelResult _) => CancelTimer();
+        public void LevelReplay() => CancelTimer();
+        private void CancelTimer() => _cancel?.Cancel();
     }
 }

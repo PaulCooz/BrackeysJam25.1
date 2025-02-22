@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -32,7 +33,17 @@ namespace JamSpace
                 _levels.Add(level);
             }
 
-            Data          = new GameData();
+            StartLevel();
+        }
+
+        private void StartLevel()
+        {
+            Data = new GameData();
+            if (_levels.Count <= Data.Level)
+            {
+                Debug.Log("Complete all levels! TODO show popup and exit the game");
+                Data.Level = _levels.Count - 1;
+            }
             LevelSettings = _levels[Data.Level];
             Data.Setup(LevelSettings);
 
@@ -50,11 +61,31 @@ namespace JamSpace
             Post<ILevelFinish>(l => l.LevelFinish(levelResult));
         }
 
+        public async UniTask ReplayLevel()
+        {
+            Post<ILevelReplay>(l => l.LevelReplay());
+            await UniTask.NextFrame();
+            StartLevel();
+        }
+
+        public void NextLevel()
+        {
+            Data.Level++;
+            ReplayLevel().Forget();
+        }
+
         public void Post<T>(Action<T> action)
         {
             var all = GetAll<T>();
             foreach (var listener in all)
                 action(listener);
+        }
+
+        public async UniTask PostAsync<T>(Func<T, UniTask> action)
+        {
+            var all = GetAll<T>();
+            foreach (var listener in all)
+                await action(listener);
         }
 
         public void PostOrdered<T>(Action<T> action) where T : IOrdered
@@ -79,6 +110,11 @@ namespace JamSpace
         public interface ILevelFinish
         {
             void LevelFinish(LevelResult result);
+        }
+
+        public interface ILevelReplay
+        {
+            void LevelReplay();
         }
 
         public readonly struct LevelResult

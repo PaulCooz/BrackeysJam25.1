@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace JamSpace
 {
-    public sealed class FishZoneSystem : MonoBehaviour, GameManager.IGameStart, FishZone.IChangeFishZone
+    public sealed class FishZoneSystem : MonoBehaviour, GameManager.IGameStart, GameManager.ILevelFinish, FishZone.IChangeFishZone,
+        GameManager.ILevelReplay
     {
         [SerializeField]
         private FishZone zonePrefab;
@@ -13,9 +15,12 @@ namespace JamSpace
         [SerializeField]
         private GameObject fishStatusIcon;
 
+        private CancellationTokenSource _cancel;
+
         public void GameStart()
         {
             fishStatusIcon.SetActive(false);
+            _cancel = new CancellationTokenSource();
             StartSpawningAsync().Forget();
         }
 
@@ -23,10 +28,10 @@ namespace JamSpace
         {
             var manager  = GameManager.Instance;
             var settings = manager.LevelSettings.fishZone;
-            while (this.IsAlive())
+            while (!_cancel.IsCancellationRequested && this.IsAlive())
             {
                 var spawnDelay = UnityEngine.Random.Range(settings.minMaxSpawnSec.x, settings.minMaxSpawnSec.y);
-                await UniTask.WaitForSeconds(spawnDelay);
+                await UniTask.WaitForSeconds(spawnDelay, cancellationToken: _cancel.Token);
 
                 var zone = Instantiate(zonePrefab, worldTransform);
 
@@ -36,10 +41,15 @@ namespace JamSpace
                     Mathf.Lerp(manager.gameWorldRect.yMin, manager.gameWorldRect.yMax, 0.5f)
                 );
             }
+            _cancel = null;
         }
 
         public void PlayerEnter() => fishStatusIcon.SetActive(true);
         public void PlayerExit()  => fishStatusIcon.SetActive(false);
+
+        public void LevelFinish(GameManager.LevelResult result) => CancelSpawning();
+        public  void LevelReplay() => CancelSpawning();
+        private void CancelSpawning() => _cancel?.Cancel();
 
         [Serializable]
         public struct Settings

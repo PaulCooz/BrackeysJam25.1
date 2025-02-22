@@ -219,7 +219,7 @@ TextureImporter:
         width: 32
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 12, y: 12, z: 12, w: 12}
       customData: 
       outline: []
@@ -228,6 +228,50 @@ TextureImporter:
       bones: []
       spriteID: 75ebfb7793e26f44f9ebc2b671424c6e
       internalID: -358802650
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: button_0
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 96
+        width: 96
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 16, y: 12, z: 16, w: 12}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 5ce0968d0862d9c4e876c846c24258e4
+      internalID: 77970827
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: button_1
+      rect:
+        serializedVersion: 2
+        x: 272
+        y: 64
+        width: 96
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 16, y: 12, z: 16, w: 12}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8aefb05f14f4ca74bb185d5e94fc093f
+      internalID: -759654913
       vertices: []
       indices: 
       edges: []
@@ -246,6 +290,8 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
+      button_0: 77970827
+      button_1: -759654913
       front_rect_0: -358802650
       rect_0: 960670299
       rect_1: -181195135
