@@ -19,7 +19,7 @@ namespace JamSpace
         {
             var gameManager = GameManager.Instance;
             var data        = gameManager.Data;
-            while (isActiveAndEnabled)
+            while (this.IsAlive())
             {
                 var span = data.TimerToGameOver;
                 tmp.text = $"{span.Minutes}:{span.Seconds}";

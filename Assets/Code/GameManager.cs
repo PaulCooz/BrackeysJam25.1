@@ -16,6 +16,8 @@ namespace JamSpace
         public bool     Running { get; private set; }
         public GameData Data    { get; private set; }
 
+        public LevelSettings LevelSettings { get; private set; }
+
         private static GameManager _instance;
         public static  GameManager Instance => _instance ??= FindAnyObjectByType<GameManager>();
 
@@ -30,8 +32,9 @@ namespace JamSpace
                 _levels.Add(level);
             }
 
-            Data = new GameData();
-            Data.Setup(_levels[Data.Level]);
+            Data          = new GameData();
+            LevelSettings = _levels[Data.Level];
+            Data.Setup(LevelSettings);
 
             Running = true;
             Post<IGameStart>(l => l.GameStart());

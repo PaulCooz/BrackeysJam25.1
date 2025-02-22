@@ -9,5 +9,7 @@ namespace JamSpace
         public int fishToCollect;
         [SerializeField]
         public double timerMinutes;
+        [SerializeField]
+        public FishZoneSystem.Settings fishZone;
     }
 }

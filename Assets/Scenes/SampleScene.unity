@@ -740,6 +740,7 @@ GameObject:
   m_Component:
   - component: {fileID: 880301737}
   - component: {fileID: 880301738}
+  - component: {fileID: 880301739}
   m_Layer: 0
   m_Name: Systems
   m_TagString: Untagged
@@ -774,6 +775,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aaaeaadd01414fad8dbdc7c53410188a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &880301739
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 880301736}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f304abca609d44bdb438caaed8303ae7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  zonePrefab: {fileID: 2021809861103137582, guid: 4bd6bea24e9ac404f950f90379c83894, type: 3}
+  worldTransform: {fileID: 1387831944}
+  fishStatusIcon: {fileID: 1270477058}
 --- !u!1 &1067063997
 GameObject:
   m_ObjectHideFlags: 0
@@ -853,6 +869,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1270477058 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8776782177640462498, guid: 9044cb92d2f60a14db5833e385df45c4, type: 3}
+  m_PrefabInstance: {fileID: 4199078191059280472}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1381875012 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7311691472895655797, guid: 5e7e98b99c1aa404197e4a0be0cb4119, type: 3}
@@ -954,7 +975,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9098453277752451582, guid: 9044cb92d2f60a14db5833e385df45c4, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 820
+      value: 940
       objectReference: {fileID: 0}
     - target: {fileID: 9098453277752451582, guid: 9044cb92d2f60a14db5833e385df45c4, type: 3}
       propertyPath: m_SizeDelta.y
@@ -990,7 +1011,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9098453277752451582, guid: 9044cb92d2f60a14db5833e385df45c4, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -470
+      value: -520
       objectReference: {fileID: 0}
     - target: {fileID: 9098453277752451582, guid: 9044cb92d2f60a14db5833e385df45c4, type: 3}
       propertyPath: m_AnchoredPosition.y

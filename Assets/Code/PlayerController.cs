@@ -7,7 +7,7 @@ using UnityEngine.Splines;
 
 namespace JamSpace
 {
-    public sealed class PlayerController : MonoBehaviour
+    public sealed class PlayerController : MonoBehaviour, FishZone.IChangeFishZone
     {
         [SerializeField]
         private float speed = 0.25f;
@@ -31,6 +31,7 @@ namespace JamSpace
 
         private UniTask? _currentTask;
         private bool     _clickBeginOnPlayer;
+        private bool     _insideFishZone;
 
         private Camera           _camera;
         private FishingMechanics _fishingMechanics;
@@ -95,7 +96,7 @@ namespace JamSpace
                 transform.position = pos;
             }
 
-            if (wasFishingAsClick || fishingInput.WasPerformedThisFrame())
+            if (_insideFishZone && (wasFishingAsClick || fishingInput.WasPerformedThisFrame()))
             {
                 spriteAnimator.Play("casting", false).Forget();
                 spriteAnimator.defaultState = "waiting";
@@ -122,6 +123,9 @@ namespace JamSpace
                 });
             }
         }
+
+        public void PlayerEnter() => _insideFishZone = true;
+        public void PlayerExit()  => _insideFishZone = false;
 
         public interface ICaughtFish
         {

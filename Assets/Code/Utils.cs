@@ -34,5 +34,8 @@ namespace JamSpace
         }
 
         public static T Rand<T>(this IReadOnlyList<T> list) => list[UnityEngine.Random.Range(0, list.Count)];
+
+        public static bool IsAlive(this MonoBehaviour monoBehaviour) => // для бесконечных циклов под UniTask-ами
+            monoBehaviour != null && monoBehaviour.isActiveAndEnabled;
     }
 }
