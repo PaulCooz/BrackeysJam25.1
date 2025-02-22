@@ -7,7 +7,7 @@ using UnityEngine.Splines;
 
 namespace JamSpace
 {
-    public sealed class PlayerController : MonoBehaviour, FishZone.IChangeFishZone
+    public sealed class PlayerController : MonoBehaviour, FishZone.IChangeFishZone, GameManager.IGameStart
     {
         [SerializeField]
         private float speed = 0.25f;
@@ -25,11 +25,14 @@ namespace JamSpace
         [SerializeField]
         private SpriteRenderer boatSprite;
         [SerializeField]
+        private SpriteRenderer humanSprite;
+        [SerializeField]
         private SpriteRenderer fishSprite;
         [SerializeField]
         private SplineContainer spline;
 
         private UniTask? _currentTask;
+        private bool     _isControlActive;
         private bool     _clickBeginOnPlayer;
         private bool     _insideFishZone;
 
@@ -50,6 +53,9 @@ namespace JamSpace
 
         private void Update()
         {
+            if (!_isControlActive)
+                return;
+            
             if (_currentTask.HasValue && !_currentTask.Value.Status.IsCompleted())
                 return;
 
@@ -124,12 +130,29 @@ namespace JamSpace
             }
         }
 
-        public void PlayerEnter() => _insideFishZone = true;
-        public void PlayerExit()  => _insideFishZone = false;
+        void GameManager.IGameStart.GameStart() => _isControlActive = true;
+        void FishZone.IChangeFishZone.PlayerEnter() => _insideFishZone = true;
+        void FishZone.IChangeFishZone.PlayerExit()  => _insideFishZone = false;
 
         public interface ICaughtFish
         {
             void PlayerCaughtFish(FishingResult fishResult);
+        }
+
+        public void OnDamage()
+        {
+            OnDamageAsync().Forget();
+        }
+
+        private async UniTaskVoid OnDamageAsync()
+        {
+            _isControlActive = false;
+            
+            await DOTween.Sequence()
+                .Join(boatSprite.DOColor(Color.red, 0.1f).SetLoops(6, LoopType.Yoyo))
+                .Join(humanSprite.DOColor(Color.red, 0.1f).SetLoops(6, LoopType.Yoyo));
+            
+            GameManager.Instance.Finish(isWin: false);
         }
     }
 }
