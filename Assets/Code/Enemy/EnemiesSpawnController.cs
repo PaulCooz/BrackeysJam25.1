@@ -24,7 +24,9 @@ namespace JamSpace
             {
                 await UniTask.WaitForSeconds(Random.Range(MinSpawnInterval, MaxSpawnInterval));
                 
-                Instantiate(enemiesPrefabs[Random.Range(0, enemiesPrefabs.Count)]).GetComponent<IEnemy>().Attack(worldPositionToAttack: new Vector3(PlayerTarget.position.x, PlayerTarget.position.y, EnemyLayer));
+                Instantiate(enemiesPrefabs[Random.Range(0, enemiesPrefabs.Count)], new Vector3(0, 0, EnemyLayer), Quaternion.identity)
+                    .GetComponent<IEnemy>()
+                    .Attack(worldPositionToAttack: new Vector3(PlayerTarget.position.x, PlayerTarget.position.y, EnemyLayer));
             }
         }
     }
