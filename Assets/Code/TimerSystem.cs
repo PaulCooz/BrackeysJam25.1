@@ -25,6 +25,8 @@ namespace JamSpace
                 tmp.text = $"{span.Minutes}:{span.Seconds}";
 
                 await UniTask.NextFrame();
+
+                span =  data.TimerToGameOver;
                 span -= TimeSpan.FromSeconds(Time.deltaTime);
 
                 data.TimerToGameOver = span;

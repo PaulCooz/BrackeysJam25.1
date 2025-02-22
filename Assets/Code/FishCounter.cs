@@ -15,7 +15,7 @@ namespace JamSpace
             tmp.text = string.Format(format, GameManager.Instance.Data.FishCount, GameManager.Instance.Data.FishToCollect);
         }
 
-        public void PlayerCaughtFish(FishingResult fishResult)
+        public void PlayerCaughtFish()
         {
             tmp.text = string.Format(format, GameManager.Instance.Data.FishCount, GameManager.Instance.Data.FishToCollect);
         }

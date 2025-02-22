@@ -57,6 +57,13 @@ namespace JamSpace
                 action(listener);
         }
 
+        public void PostOrdered<T>(Action<T> action) where T : IOrdered
+        {
+            var all = GetAll<T>().OrderBy(l => l.Order);
+            foreach (var listener in all)
+                action(listener);
+        }
+
         private T[] GetAll<T>()
         {
             return FindObjectsByType<Object>(FindObjectsInactive.Include, FindObjectsSortMode.None)

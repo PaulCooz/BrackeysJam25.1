@@ -11,5 +11,7 @@ namespace JamSpace
         public double timerMinutes;
         [SerializeField]
         public FishZoneSystem.Settings fishZone;
+        [SerializeField]
+        public FishingMechanics.FishingHookSettings fishingHook;
     }
 }

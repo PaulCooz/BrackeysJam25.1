@@ -11,7 +11,7 @@ namespace JamSpace
             _data = GameManager.Instance.Data;
         }
 
-        public void PlayerCaughtFish(FishingResult fishResult)
+        public void PlayerCaughtFish()
         {
             if (_data.FishCount == _data.FishToCollect)
             {

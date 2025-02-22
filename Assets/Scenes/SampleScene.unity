@@ -553,8 +553,8 @@ MonoBehaviour:
   enemiesPrefabs:
   - {fileID: 1182900013234764554, guid: 9ff4149a804834341ac90577dc381fe2, type: 3}
   PlayerTarget: {fileID: 1381875012}
-  MinSpawnInterval: 2
-  MaxSpawnInterval: 7
+  MinSpawnInterval: 20
+  MaxSpawnInterval: 20
 --- !u!1001 &791166840
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -975,7 +975,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9098453277752451582, guid: 9044cb92d2f60a14db5833e385df45c4, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 940
+      value: 1060
       objectReference: {fileID: 0}
     - target: {fileID: 9098453277752451582, guid: 9044cb92d2f60a14db5833e385df45c4, type: 3}
       propertyPath: m_SizeDelta.y
@@ -1011,7 +1011,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 9098453277752451582, guid: 9044cb92d2f60a14db5833e385df45c4, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -520
+      value: -580
       objectReference: {fileID: 0}
     - target: {fileID: 9098453277752451582, guid: 9044cb92d2f60a14db5833e385df45c4, type: 3}
       propertyPath: m_AnchoredPosition.y

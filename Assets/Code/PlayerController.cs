@@ -7,10 +7,11 @@ using UnityEngine.Splines;
 
 namespace JamSpace
 {
-    public sealed class PlayerController : MonoBehaviour, FishZone.IChangeFishZone, GameManager.IGameStart
+    public sealed class PlayerController : MonoBehaviour, FishZone.IChangeFishZone, GameManager.IGameStart,
+        PlayerController.IChangeSpeed
     {
         [SerializeField]
-        private float speed = 0.25f;
+        public float speed = 0.25f;
 
         [SerializeField]
         private InputAction moveLeftInput;
@@ -39,6 +40,8 @@ namespace JamSpace
         private Camera           _camera;
         private FishingMechanics _fishingMechanics;
 
+        public float CurrentSpeed { get; private set; }
+
         private void Awake()
         {
             _camera           = FindFirstObjectByType<Camera>();
@@ -49,6 +52,13 @@ namespace JamSpace
             moveLeftInput.Enable();
             moveRightInput.Enable();
             fishingInput.Enable();
+        }
+        
+        
+        void GameManager.IGameStart.GameStart()
+        {
+            _isControlActive = true;
+            CurrentSpeed    = speed;
         }
 
         private void Update()
@@ -96,7 +106,7 @@ namespace JamSpace
             {
                 var bounds = GameManager.Instance.gameWorldRect;
                 var pos    = transform.position;
-                pos.x += speed * moveDirection.Value * Time.deltaTime;
+                pos.x += CurrentSpeed * moveDirection.Value * Time.deltaTime;
                 pos.x =  Mathf.Clamp(pos.x, bounds.xMin, bounds.xMax);
 
                 transform.position = pos;
@@ -111,7 +121,7 @@ namespace JamSpace
                 _currentTask = _fishingMechanics.Run(
                     castingAnimDur, caughtAnimDur,
                     () => fishingInput.WasPerformedThisFrame() || mouse.leftButton.wasReleasedThisFrame
-                ).ContinueWith(result =>
+                ).ContinueWith(() =>
                 {
                     const float show = 0.1f, fly = 0.8f, hide = 0.1f, step = 0.1f;
 
@@ -121,22 +131,26 @@ namespace JamSpace
                         seq.Append(fishSprite.transform.DOMove(spline.EvaluatePosition(t), caughtAnimDur * (fly * step)));
                     seq.Append(fishSprite.transform.DOScale(0, caughtAnimDur * hide));
 
-                    GameManager.Instance.Data.FishCount += result.PointsToAdd;
-                    GameManager.Instance.Post<ICaughtFish>(l => l.PlayerCaughtFish(result));
-
                     spriteAnimator.defaultState = "idle";
                     return spriteAnimator.Play("caught", false);
                 });
             }
         }
 
-        void GameManager.IGameStart.GameStart() => _isControlActive = true;
         void FishZone.IChangeFishZone.PlayerEnter() => _insideFishZone = true;
         void FishZone.IChangeFishZone.PlayerExit()  => _insideFishZone = false;
 
+        void IChangeSpeed.PlayerChangeSpeed(int delta) =>
+            CurrentSpeed = Mathf.Clamp(CurrentSpeed + delta, speed / 2, 2 * speed);
+
         public interface ICaughtFish
         {
-            void PlayerCaughtFish(FishingResult fishResult);
+            void PlayerCaughtFish();
+        }
+
+        public interface IChangeSpeed : IOrdered
+        {
+            void PlayerChangeSpeed(int delta);
         }
 
         public void OnDamage()
@@ -147,11 +161,11 @@ namespace JamSpace
         private async UniTaskVoid OnDamageAsync()
         {
             _isControlActive = false;
-            
+
             await DOTween.Sequence()
                 .Join(boatSprite.DOColor(Color.red, 0.1f).SetLoops(6, LoopType.Yoyo))
                 .Join(humanSprite.DOColor(Color.red, 0.1f).SetLoops(6, LoopType.Yoyo));
-            
+
             GameManager.Instance.Finish(isWin: false);
         }
     }

@@ -17,3 +17,14 @@ MonoBehaviour:
   fishZone:
     minMaxSpawnSec: {x: 4, y: 6}
     minMaxDurationSec: {x: 4, y: 6}
+  fishingHook:
+    minMaxSectorCount: {x: 3, y: 5}
+    minMaxSectorWidth: {x: 10, y: 10}
+    proportionOfSpace: 2000
+    proportionOfFish: 500
+    chanceOfDecreaseFish: 10
+    proportionOfTime: 250
+    chanceOfDecreaseTime: 20
+    timeDecIncSec: {x: -15, y: 15}
+    proportionOfSpeed: 250
+    chanceOfDecreaseSpeed: 30

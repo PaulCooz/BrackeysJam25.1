@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace JamSpace
 {
-    public class FishingMechanics : MonoBehaviour
+    public class FishingMechanics : MonoBehaviour, GameManager.IGameStart
     {
         [SerializeField]
         private RectTransform catchMarker;
@@ -25,6 +25,8 @@ namespace JamSpace
         private Vector2 _markerCurrentDirection;
         private float   _markerSpeed;
 
+        private FishingHookSettings _settings;
+
         private void Awake()
         {
             canvasGroup.alpha          = 0;
@@ -35,7 +37,12 @@ namespace JamSpace
             _markerCurrentDirection = Vector2.right;
         }
 
-        public async UniTask<FishingResult> Run(float fadeInDur, float fadeOutDur, Func<bool> catchSector)
+        public void GameStart()
+        {
+            _settings = GameManager.Instance.LevelSettings.fishingHook;
+        }
+
+        public async UniTask Run(float fadeInDur, float fadeOutDur, Func<bool> catchSector)
         {
             var (speed, sectors) = GetRandomSpeedAndSectors();
             Setup(speed, sectors);
@@ -70,14 +77,31 @@ namespace JamSpace
 
             canvasGroup
                 .DOFade(0, fadeOutDur)
-                .OnComplete(() => canvasGroup.blocksRaycasts = false)
+                .OnComplete(() =>
+                {
+                    canvasGroup.blocksRaycasts = false;
+                    Reset();
+                })
                 .ToUniTask()
                 .Forget();
 
-            return new FishingResult(currentSector.PointsToAdd);
+            var manager = GameManager.Instance;
+            switch (currentSector.Info.Type)
+            {
+                case FishingSectorView.SectorType.Fish:
+                    manager.Data.FishCount += currentSector.Info.Value;
+                    manager.Post<PlayerController.ICaughtFish>(l => l.PlayerCaughtFish());
+                    break;
+                case FishingSectorView.SectorType.Time:
+                    manager.Data.TimerToGameOver += TimeSpan.FromSeconds(currentSector.Info.Value);
+                    break;
+                case FishingSectorView.SectorType.Speed:
+                    manager.PostOrdered<PlayerController.IChangeSpeed>(l => l.PlayerChangeSpeed(currentSector.Info.Value));
+                    break;
+            }
         }
 
-        private void Setup(float markerSpeed, List<(int weight, int pointsToAdd)> sectors)
+        private void Setup(float markerSpeed, List<FishingSectorView.FishingSector> sectors)
         {
             _markerSpeed = markerSpeed;
 
@@ -85,7 +109,7 @@ namespace JamSpace
             {
                 var sector = Instantiate(sectorPrefab, sectorsContainer);
 
-                sector.Initialize(weight: sectorInfo.weight, pointsToAdd: sectorInfo.pointsToAdd);
+                sector.Initialize(sectorInfo);
 
                 _sectorInstances.Add(sector);
             }
@@ -94,25 +118,43 @@ namespace JamSpace
                 new Vector2(Random.Range(-_markerBorderValue * 0.8f, _markerBorderValue * 0.8f), 0f);
         }
 
-        private (float speed, List<(int weight, int pointsToAdd)> sectors) GetRandomSpeedAndSectors()
+        private (float speed, List<FishingSectorView.FishingSector> sectors) GetRandomSpeedAndSectors()
         {
-            var  sectorsInfo         = new List<(int weight, int pointsToAdd)>();
-            var  sectorsCount        = Random.Range(3, 8);
-            int? previousPointsToAdd = null;
-
+            var sectorsInfo  = new List<FishingSectorView.FishingSector>();
+            var sectorsCount = Random.Range(_settings.minMaxSectorCount.x, _settings.minMaxSectorCount.y);
             for (var i = 0; i < sectorsCount; i++)
             {
-                var pointsToAdd = Random.Range(-3, 3);
-                var weight      = Random.Range(30, 100);
-
-                if (previousPointsToAdd is > 0 && pointsToAdd > 0 || previousPointsToAdd is < 0 && pointsToAdd < 0)
+                var propWithType = new[]
                 {
-                    pointsToAdd = -pointsToAdd;
+                    (prop: _settings.proportionOfSpace, type: FishingSectorView.SectorType.Space),
+                    (prop: _settings.proportionOfFish, type: FishingSectorView.SectorType.Fish),
+                    (prop: _settings.proportionOfSpeed, type: FishingSectorView.SectorType.Speed),
+                    (prop: _settings.proportionOfTime, type: FishingSectorView.SectorType.Time),
+                };
+                var c    = Random.Range(0, propWithType.Sum(p => p.prop));
+                var type = propWithType.First().type;
+                foreach (var p in propWithType)
+                {
+                    if (c < p.prop)
+                    {
+                        type = p.type;
+                        break;
+                    }
+                    c -= p.prop;
                 }
 
-                sectorsInfo.Add((weight, pointsToAdd));
+                var value = type switch
+                {
+                    FishingSectorView.SectorType.Fish => Random.Range(0, 100) < _settings.chanceOfDecreaseFish ? -1 : +1,
+                    FishingSectorView.SectorType.Time => Random.Range(0, 100) < _settings.chanceOfDecreaseTime
+                        ? _settings.timeDecIncSec.x
+                        : _settings.timeDecIncSec.y,
+                    FishingSectorView.SectorType.Speed => Random.Range(0, 100) < _settings.chanceOfDecreaseSpeed ? -1 : +1,
+                    _                                  => 0
+                };
+                var width = Random.Range(_settings.minMaxSectorWidth.x, _settings.minMaxSectorWidth.y);
 
-                previousPointsToAdd = pointsToAdd;
+                sectorsInfo.Add(new FishingSectorView.FishingSector(type, value, width));
             }
 
             var markerSpeed = Random.Range(100f, 1000f);
@@ -129,15 +171,24 @@ namespace JamSpace
 
             _sectorInstances.Clear();
         }
-    }
 
-    public readonly struct FishingResult
-    {
-        public readonly int PointsToAdd;
-
-        public FishingResult(int pointsToAdd)
+        [Serializable]
+        public struct FishingHookSettings
         {
-            PointsToAdd = pointsToAdd;
+            public Vector2Int minMaxSectorCount;
+            public Vector2Int minMaxSectorWidth;
+
+            public int proportionOfSpace;
+
+            public int proportionOfFish;
+            public int chanceOfDecreaseFish;
+
+            public int        proportionOfTime;
+            public int        chanceOfDecreaseTime;
+            public Vector2Int timeDecIncSec;
+
+            public int proportionOfSpeed;
+            public int chanceOfDecreaseSpeed;
         }
     }
 }
