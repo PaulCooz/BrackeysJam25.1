@@ -42,7 +42,7 @@ namespace JamSpace
             _settings = GameManager.Instance.LevelSettings.fishingHook;
         }
 
-        public async UniTask Run(float fadeInDur, float fadeOutDur, Func<bool> catchSector)
+        public async UniTask<FishingSectorView.FishingSector> Run(float fadeInDur, float fadeOutDur, Func<bool> catchSector)
         {
             var (speed, sectors) = GetRandomSpeedAndSectors();
             Setup(speed, sectors);
@@ -99,6 +99,8 @@ namespace JamSpace
                     manager.PostOrdered<PlayerController.IChangeSpeed>(l => l.PlayerChangeSpeed(currentSector.Info.Value));
                     break;
             }
+
+            return currentSector.Info;
         }
 
         private void Setup(float markerSpeed, List<FishingSectorView.FishingSector> sectors)

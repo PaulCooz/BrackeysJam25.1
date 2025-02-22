@@ -23,7 +23,7 @@ namespace JamSpace
         private int       _currentSprite;
         private TimeUntil _nextSprite;
 
-        private (Sprite[] sprites, bool looped, UniTaskCompletionSource complete)? _curr, _next;
+        private (Sprite[] sprites, float timeScale, bool looped, UniTaskCompletionSource complete)? _curr, _next;
 
         private void Awake()
         {
@@ -37,7 +37,8 @@ namespace JamSpace
             _curr          = null;
             _currentSprite = 0;
 
-            _next = (_stateAnim[state].sprites, looped, new UniTaskCompletionSource());
+            var animSet = _stateAnim[state];
+            _next = (animSet.sprites, animSet.timeScale, looped, new UniTaskCompletionSource());
             return _next.Value.complete.Task;
         }
 
@@ -45,7 +46,8 @@ namespace JamSpace
         {
             if (!_curr.HasValue)
             {
-                _curr = _next ?? (_stateAnim[defaultState].sprites, true, new UniTaskCompletionSource());
+                var animSet = _stateAnim[defaultState];
+                _curr = _next ?? (animSet.sprites, animSet.timeScale, true, new UniTaskCompletionSource());
                 _next = null;
             }
 
@@ -56,7 +58,7 @@ namespace JamSpace
                 if (_currentSprite < curr.sprites.Length)
                 {
                     _renderer.sprite = curr.sprites[_currentSprite];
-                    _nextSprite      = delay;
+                    _nextSprite      = delay / curr.timeScale;
                 }
                 else
                 {
@@ -67,12 +69,17 @@ namespace JamSpace
             }
         }
 
-        public float GetDuration(string state) => _stateAnim[state].sprites.Length * delay;
+        public float GetDuration(string state)
+        {
+            var animSet = _stateAnim[state];
+            return animSet.sprites.Length * delay / animSet.timeScale;
+        }
 
         [Serializable]
         private class AnimSet
         {
             public string   state;
+            public float    timeScale = 1f;
             public Sprite[] sprites;
         }
     }

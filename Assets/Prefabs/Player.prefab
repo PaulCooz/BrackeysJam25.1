@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 570700130560069049}
   - component: {fileID: 2125308972531225019}
   m_Layer: 0
-  m_Name: CaughtFish
+  m_Name: Caught
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -362,6 +362,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   anims:
   - state: waiting
+    timeScale: 1
     sprites:
     - {fileID: -451161356, guid: f432afd5915d660489d577ee112d6b24, type: 3}
     - {fileID: 1522781836, guid: f432afd5915d660489d577ee112d6b24, type: 3}
@@ -372,6 +373,7 @@ MonoBehaviour:
     - {fileID: 849074370, guid: f432afd5915d660489d577ee112d6b24, type: 3}
     - {fileID: -1644018705, guid: f432afd5915d660489d577ee112d6b24, type: 3}
   - state: casting
+    timeScale: 2
     sprites:
     - {fileID: -659856709, guid: f432afd5915d660489d577ee112d6b24, type: 3}
     - {fileID: 1901689324, guid: f432afd5915d660489d577ee112d6b24, type: 3}
@@ -389,6 +391,7 @@ MonoBehaviour:
     - {fileID: -285836853, guid: f432afd5915d660489d577ee112d6b24, type: 3}
     - {fileID: 1834162872, guid: f432afd5915d660489d577ee112d6b24, type: 3}
   - state: caught
+    timeScale: 2
     sprites:
     - {fileID: 29876169, guid: f432afd5915d660489d577ee112d6b24, type: 3}
     - {fileID: -1267393533, guid: f432afd5915d660489d577ee112d6b24, type: 3}
@@ -399,6 +402,7 @@ MonoBehaviour:
     - {fileID: 470892138, guid: f432afd5915d660489d577ee112d6b24, type: 3}
     - {fileID: 1445521645, guid: f432afd5915d660489d577ee112d6b24, type: 3}
   - state: reeling
+    timeScale: 1
     sprites:
     - {fileID: 707764, guid: f432afd5915d660489d577ee112d6b24, type: 3}
     - {fileID: 1626940663, guid: f432afd5915d660489d577ee112d6b24, type: 3}
@@ -414,6 +418,7 @@ MonoBehaviour:
     - {fileID: -1085184056, guid: f432afd5915d660489d577ee112d6b24, type: 3}
     - {fileID: 1325879728, guid: f432afd5915d660489d577ee112d6b24, type: 3}
   - state: idle
+    timeScale: 1
     sprites:
     - {fileID: -1719070773, guid: 3007ef97c9ac44e49480f788518de952, type: 3}
     - {fileID: -820887784, guid: 3007ef97c9ac44e49480f788518de952, type: 3}
@@ -435,7 +440,7 @@ GameObject:
   - component: {fileID: 711401399013963351}
   - component: {fileID: 6485971953105200720}
   m_Layer: 0
-  m_Name: Fish
+  m_Name: CaughtIcon
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5446,8 +5451,12 @@ MonoBehaviour:
   spriteAnimator: {fileID: 6577873007128951366}
   boatSprite: {fileID: 8267054415739566158}
   humanSprite: {fileID: 3170987338249041119}
-  fishSprite: {fileID: 5353707855606546062}
+  caughtIcon: {fileID: 5353707855606546062}
   spline: {fileID: 2125308972531225019}
+  fishSprite: {fileID: 21300000, guid: 9a08b1638ae85d14cb02583b89204d83, type: 3}
+  timeSprite: {fileID: 21300000, guid: 3773a63d508dd7849b995fad6422d940, type: 3}
+  bootFastSprite: {fileID: 21300000, guid: 65b5efea447d8424894c46ac1866caff, type: 3}
+  bootSlowSprite: {fileID: 21300000, guid: a5c6c64d56b84cd4b82a08d19978e042, type: 3}
 --- !u!1 &3958054438263832209
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,9 +28,18 @@ namespace JamSpace
         [SerializeField]
         private SpriteRenderer humanSprite;
         [SerializeField]
-        private SpriteRenderer fishSprite;
+        private SpriteRenderer caughtIcon;
         [SerializeField]
         private SplineContainer spline;
+
+        [SerializeField]
+        private Sprite fishSprite;
+        [SerializeField]
+        private Sprite timeSprite;
+        [SerializeField]
+        private Sprite bootFastSprite;
+        [SerializeField]
+        private Sprite bootSlowSprite;
 
         private UniTask? _currentTask;
         private bool     _clickBeginOnPlayer;
@@ -46,13 +55,13 @@ namespace JamSpace
             _camera           = FindFirstObjectByType<Camera>();
             _fishingMechanics = FindFirstObjectByType<FishingMechanics>();
 
-            fishSprite.transform.localScale = Vector3.zero;
+            caughtIcon.transform.localScale = Vector3.zero;
 
             moveLeftInput.Enable();
             moveRightInput.Enable();
             fishingInput.Enable();
         }
-        
+
         void GameManager.IGameStart.GameStart()
         {
             CurrentSpeed = speed;
@@ -63,7 +72,7 @@ namespace JamSpace
             var manager = GameManager.Instance;
             if (!manager.Running)
                 return;
-            
+
             if (_currentTask.HasValue && !_currentTask.Value.Status.IsCompleted())
                 return;
 
@@ -118,7 +127,7 @@ namespace JamSpace
                 _currentTask = _fishingMechanics.Run(
                     castingAnimDur, caughtAnimDur,
                     () => fishingInput.WasPerformedThisFrame() || mouse.leftButton.wasReleasedThisFrame || !manager.Running
-                ).ContinueWith(() =>
+                ).ContinueWith(result =>
                 {
                     if (!manager.Running)
                     {
@@ -126,13 +135,21 @@ namespace JamSpace
                         return UniTask.CompletedTask;
                     }
 
+                    caughtIcon.sprite = result.Type switch
+                    {
+                        FishingSectorView.SectorType.Time  => timeSprite,
+                        FishingSectorView.SectorType.Speed => result.Value >= 0 ? bootFastSprite : bootSlowSprite,
+                        FishingSectorView.SectorType.Space => null,
+                        _                                  => fishSprite
+                    };
+
                     const float show = 0.1f, fly = 0.8f, hide = 0.1f, step = 0.1f;
 
                     var seq = DOTween.Sequence();
-                    seq.Append(fishSprite.transform.DOScale(1, caughtAnimDur * show));
+                    seq.Append(caughtIcon.transform.DOScale(1, caughtAnimDur * show));
                     for (var t = 0f; t <= 1f; t += step)
-                        seq.Append(fishSprite.transform.DOMove(spline.EvaluatePosition(t), caughtAnimDur * (fly * step)));
-                    seq.Append(fishSprite.transform.DOScale(0, caughtAnimDur * hide));
+                        seq.Append(caughtIcon.transform.DOMove(spline.EvaluatePosition(t), caughtAnimDur * (fly * step)));
+                    seq.Append(caughtIcon.transform.DOScale(0, caughtAnimDur * hide));
 
                     spriteAnimator.defaultState = "idle";
                     return spriteAnimator.Play("caught", false);
