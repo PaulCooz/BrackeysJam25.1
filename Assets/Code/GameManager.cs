@@ -19,7 +19,7 @@ namespace JamSpace
         public LevelSettings LevelSettings { get; private set; }
 
         private static GameManager _instance;
-        public static  GameManager Instance => _instance ??= FindAnyObjectByType<GameManager>();
+        public static  GameManager Instance => _instance != null ? _instance : _instance = FindAnyObjectByType<GameManager>();
 
         public void Start()
         {
