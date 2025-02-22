@@ -51,7 +51,7 @@ namespace JamSpace
             Setup(speed, sectors);
             
             wooshSound.Play();
-            DOVirtual.DelayedCall(0.5f, () => waterSplash.Play());
+            DOVirtual.DelayedCall(0.2f, () => waterSplash.Play());
 
             await canvasGroup.DOFade(1, fadeInDur).OnComplete(() => canvasGroup.blocksRaycasts = true);
             
