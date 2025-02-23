@@ -132,6 +132,7 @@ namespace JamSpace
                     if (!manager.Running)
                     {
                         spriteAnimator.defaultState = "idle";
+                        spriteAnimator.DropCurrentAnim();
                         return UniTask.CompletedTask;
                     }
 
@@ -184,6 +185,8 @@ namespace JamSpace
                 .Join(boatSprite.DOColor(Color.red, 0.1f).SetLoops(6, LoopType.Yoyo))
                 .Join(humanSprite.DOColor(Color.red, 0.1f).SetLoops(6, LoopType.Yoyo));
 
+            spriteAnimator.defaultState = "idle";
+            spriteAnimator.DropCurrentAnim();
             GameManager.Instance.Finish(isWin: false);
         }
     }

@@ -42,6 +42,16 @@ namespace JamSpace
             return _next.Value.complete.Task;
         }
 
+        public void DropCurrentAnim()
+        {
+            if (_curr.HasValue)
+            {
+                _curr.Value.complete.TrySetResult();
+                _curr          = null;
+                _currentSprite = 0;
+            }
+        }
+
         private void Update()
         {
             if (!_curr.HasValue)
