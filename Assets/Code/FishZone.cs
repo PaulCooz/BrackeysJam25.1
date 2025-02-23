@@ -18,9 +18,11 @@ namespace JamSpace
                 {
                     if (this.IsAlive())
                     {
+#if UNITY_EDITOR
                         if (!UnityEditor.EditorApplication.isPlaying) // при остановке игры в редакторе не удаляет объект
                             DestroyImmediate(gameObject);
                         else
+#endif
                             Destroy(gameObject);
                     }
                 })
