@@ -10,21 +10,21 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4c13887d231640eca5ae97618f68997b, type: 3}
-  m_Name: Level_0
+  m_Name: Level_2
   m_EditorClassIdentifier: 
   fishToCollect: 3
-  timerMinutes: 4
+  timerMinutes: 5
   fishZone:
-    minMaxSpawnSec: {x: 2, y: 6}
-    minMaxDurationSec: {x: 6, y: 10}
+    minMaxSpawnSec: {x: 4, y: 6}
+    minMaxDurationSec: {x: 4, y: 6}
   fishingHook:
-    minMaxSectorCount: {x: 2, y: 2}
+    minMaxSectorCount: {x: 3, y: 5}
     minMaxSectorWidth: {x: 10, y: 10}
     proportionOfSpace: 2000
     proportionOfFish: 500
-    chanceOfDecreaseFish: 0
-    proportionOfTime: 0
-    chanceOfDecreaseTime: 0
-    timeDecIncSec: {x: 0, y: 0}
-    proportionOfSpeed: 0
-    chanceOfDecreaseSpeed: 0
+    chanceOfDecreaseFish: 10
+    proportionOfTime: 250
+    chanceOfDecreaseTime: 20
+    timeDecIncSec: {x: -15, y: 15}
+    proportionOfSpeed: 250
+    chanceOfDecreaseSpeed: 30
