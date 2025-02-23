@@ -1111,6 +1111,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: StatusBar
       objectReference: {fileID: 0}
+    - target: {fileID: 8849258292980430162, guid: 9044cb92d2f60a14db5833e385df45c4, type: 3}
+      propertyPath: m_text
+      value: '-'
+      objectReference: {fileID: 0}
+    - target: {fileID: 8849258292980430162, guid: 9044cb92d2f60a14db5833e385df45c4, type: 3}
+      propertyPath: m_fontSize
+      value: 24
+      objectReference: {fileID: 0}
     - target: {fileID: 9098453277752451582, guid: 9044cb92d2f60a14db5833e385df45c4, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5

@@ -43,7 +43,7 @@ namespace JamSpace
 
         private UniTask? _currentTask;
         private bool     _clickBeginOnPlayer;
-        private bool     _insideFishZone;
+        private int      _insideFishZone;
 
         private Camera           _camera;
         private FishingMechanics _fishingMechanics;
@@ -118,7 +118,7 @@ namespace JamSpace
                 transform.position = pos;
             }
 
-            if (_insideFishZone && (wasFishingAsClick || fishingInput.WasPerformedThisFrame()))
+            if (_insideFishZone > 0 && (wasFishingAsClick || fishingInput.WasPerformedThisFrame()))
             {
                 spriteAnimator.Play("casting", false).Forget();
                 spriteAnimator.defaultState = "waiting";
@@ -157,8 +157,8 @@ namespace JamSpace
             }
         }
 
-        void FishZone.IChangeFishZone.PlayerEnter() => _insideFishZone = true;
-        void FishZone.IChangeFishZone.PlayerExit()  => _insideFishZone = false;
+        void FishZone.IChangeFishZone.PlayerEnter() => _insideFishZone++;
+        void FishZone.IChangeFishZone.PlayerExit()  => _insideFishZone--;
 
         void IChangeSpeed.PlayerChangeSpeed(int delta) =>
             CurrentSpeed = Mathf.Clamp(CurrentSpeed + delta, speed / 2, 2 * speed);
