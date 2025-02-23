@@ -32,16 +32,17 @@ namespace JamSpace
                     break;
                 _levels.Add(level);
             }
+            Data = new GameData();
 
-            StartLevel();
+            PostAsync<IGameStart>(l => l.GameStartAsync())
+                .ContinueWith(StartLevelAsync).Forget();
         }
 
-        private void StartLevel()
+        private async UniTask StartLevelAsync()
         {
-            Data = new GameData();
             if (_levels.Count <= Data.Level)
             {
-                Debug.Log("Complete all levels! TODO show popup and exit the game");
+                await PostAsync<IGameFinish>(l => l.GameFinishAsync());
                 Data.Level = _levels.Count - 1;
             }
             LevelSettings = _levels[Data.Level];
@@ -65,7 +66,7 @@ namespace JamSpace
         {
             Post<ILevelReplay>(l => l.LevelReplay());
             await UniTask.NextFrame();
-            StartLevel();
+            StartLevelAsync().Forget();
         }
 
         public void NextLevel()
@@ -100,6 +101,16 @@ namespace JamSpace
             return FindObjectsByType<Object>(FindObjectsInactive.Include, FindObjectsSortMode.None)
                 .OfType<T>()
                 .ToArray();
+        }
+
+        public interface IGameStart
+        {
+            UniTask GameStartAsync();
+        }
+
+        public interface IGameFinish
+        {
+            UniTask GameFinishAsync();
         }
 
         public interface ILevelStart
@@ -159,6 +170,12 @@ namespace JamSpace
         {
             get => _timerToGameOver;
             set => _timerToGameOver = value < TimeSpan.Zero ? TimeSpan.Zero : value;
+        }
+
+        public bool ShownFirstTutor
+        {
+            get => PlayerPrefs.GetInt("shown_first_tutor", 0) == 1;
+            set => PlayerPrefs.SetInt("shown_first_tutor", value ? 1 : 0);
         }
     }
 }
