@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace JamSpace
 {
-    public sealed class FishZoneSystem : MonoBehaviour, GameManager.IGameStart, GameManager.ILevelFinish, FishZone.IChangeFishZone,
+    public sealed class FishZoneSystem : MonoBehaviour, GameManager.ILevelStart, GameManager.ILevelFinish, FishZone.IChangeFishZone,
         GameManager.ILevelReplay
     {
         [SerializeField]
@@ -17,7 +17,7 @@ namespace JamSpace
 
         private CancellationTokenSource _cancel;
 
-        public void GameStart()
+        public void LevelStart()
         {
             fishStatusIcon.SetActive(false);
             _cancel = new CancellationTokenSource();

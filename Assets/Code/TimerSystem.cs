@@ -6,14 +6,14 @@ using UnityEngine;
 
 namespace JamSpace
 {
-    public sealed class TimerSystem : MonoBehaviour, GameManager.IGameStart, GameManager.ILevelFinish, GameManager.ILevelReplay
+    public sealed class TimerSystem : MonoBehaviour, GameManager.ILevelStart, GameManager.ILevelFinish, GameManager.ILevelReplay
     {
         [SerializeField]
         private TMP_Text tmp;
 
         private CancellationTokenSource _cancel;
 
-        public void GameStart()
+        public void LevelStart()
         {
             _cancel = new CancellationTokenSource();
             StartTimer().Forget();

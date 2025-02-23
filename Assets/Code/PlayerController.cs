@@ -7,7 +7,7 @@ using UnityEngine.Splines;
 
 namespace JamSpace
 {
-    public sealed class PlayerController : MonoBehaviour, FishZone.IChangeFishZone, GameManager.IGameStart,
+    public sealed class PlayerController : MonoBehaviour, FishZone.IChangeFishZone, GameManager.ILevelStart,
         PlayerController.IChangeSpeed
     {
         [SerializeField]
@@ -62,7 +62,7 @@ namespace JamSpace
             fishingInput.Enable();
         }
 
-        void GameManager.IGameStart.GameStart()
+        void GameManager.ILevelStart.LevelStart()
         {
             CurrentSpeed = speed;
         }

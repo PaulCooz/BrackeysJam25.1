@@ -48,7 +48,7 @@ namespace JamSpace
             Data.Setup(LevelSettings);
 
             Running = true;
-            Post<IGameStart>(l => l.GameStart());
+            Post<ILevelStart>(l => l.LevelStart());
         }
 
         public void Finish(bool isWin)
@@ -102,9 +102,9 @@ namespace JamSpace
                 .ToArray();
         }
 
-        public interface IGameStart
+        public interface ILevelStart
         {
-            void GameStart();
+            void LevelStart();
         }
 
         public interface ILevelFinish

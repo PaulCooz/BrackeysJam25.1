@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace JamSpace
 {
-    public class EnemiesSpawnController : MonoBehaviour, GameManager.IGameStart, GameManager.ILevelFinish,
+    public class EnemiesSpawnController : MonoBehaviour, GameManager.ILevelStart, GameManager.ILevelFinish,
         GameManager.ILevelReplay
     {
         private const float EnemyLayer = -3f;
@@ -21,7 +21,7 @@ namespace JamSpace
 
         private CancellationTokenSource _cancel;
 
-        public void GameStart()
+        public void LevelStart()
         {
             _cancel = new CancellationTokenSource();
             SpawnEnemiesAsync().Forget();

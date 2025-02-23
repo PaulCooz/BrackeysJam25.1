@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace JamSpace
 {
-    public sealed class SpeedIndicator : MonoBehaviour, GameManager.IGameStart, PlayerController.IChangeSpeed
+    public sealed class SpeedIndicator : MonoBehaviour, GameManager.ILevelStart, PlayerController.IChangeSpeed
     {
         int IOrdered.Order => int.MaxValue;
 
@@ -16,7 +16,7 @@ namespace JamSpace
 
         private PlayerController _player;
 
-        public void GameStart()
+        public void LevelStart()
         {
             _player = FindFirstObjectByType<PlayerController>();
             UpdateIndicator();

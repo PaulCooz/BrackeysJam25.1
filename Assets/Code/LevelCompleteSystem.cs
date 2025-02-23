@@ -2,11 +2,11 @@
 
 namespace JamSpace
 {
-    public sealed class LevelCompleteSystem : MonoBehaviour, GameManager.IGameStart, PlayerController.ICaughtFish
+    public sealed class LevelCompleteSystem : MonoBehaviour, GameManager.ILevelStart, PlayerController.ICaughtFish
     {
         private GameData _data;
 
-        public void GameStart()
+        public void LevelStart()
         {
             _data = GameManager.Instance.Data;
         }

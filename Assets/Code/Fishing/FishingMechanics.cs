@@ -8,7 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace JamSpace
 {
-    public class FishingMechanics : MonoBehaviour, GameManager.IGameStart
+    public class FishingMechanics : MonoBehaviour, GameManager.ILevelStart
     {
         [SerializeField]
         private RectTransform catchMarker;
@@ -40,7 +40,7 @@ namespace JamSpace
             _markerCurrentDirection = Vector2.right;
         }
 
-        public void GameStart()
+        public void LevelStart()
         {
             _settings = GameManager.Instance.LevelSettings.fishingHook;
         }
