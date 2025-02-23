@@ -34,6 +34,9 @@ namespace JamSpace
             }
             Data = new GameData();
 
+            LevelSettings = _levels[Mathf.Min(Data.Level, _levels.Count - 1)];
+            Data.Setup(LevelSettings);
+
             PostAsync<IGameStart>(l => l.GameStartAsync())
                 .ContinueWith(StartLevelAsync).Forget();
         }

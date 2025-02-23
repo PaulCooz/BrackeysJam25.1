@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Cysharp.Threading.Tasks;
+using TMPro;
 using UnityEngine;
 
 namespace JamSpace
@@ -9,6 +10,11 @@ namespace JamSpace
         private TMP_Text tmp;
         [SerializeField]
         private string format = "{0} fish from {1}";
+
+        private void Start()
+        {
+            UniTask.NextFrame().ContinueWith(LevelStart).Forget();
+        }
 
         public void LevelStart()
         {
