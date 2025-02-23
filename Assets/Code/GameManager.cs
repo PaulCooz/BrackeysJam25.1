@@ -177,5 +177,11 @@ namespace JamSpace
             get => PlayerPrefs.GetInt("shown_first_tutor", 0) == 1;
             set => PlayerPrefs.SetInt("shown_first_tutor", value ? 1 : 0);
         }
+
+        public bool ShownFishingTutor
+        {
+            get => PlayerPrefs.GetInt("shown_fishing_tutor", 0) == 1;
+            set => PlayerPrefs.SetInt("shown_fishing_tutor", value ? 1 : 0);
+        }
     }
 }
