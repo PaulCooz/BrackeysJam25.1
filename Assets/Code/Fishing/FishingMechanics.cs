@@ -18,9 +18,9 @@ namespace JamSpace
         private FishingSectorView sectorPrefab;
         [SerializeField]
         private CanvasGroup canvasGroup;
-        [SerializeField] 
+        [SerializeField]
         private AudioSource reelingSound, wooshSound, waterSplash;
-        
+
 
         private readonly List<FishingSectorView> _sectorInstances = new ();
 
@@ -49,12 +49,12 @@ namespace JamSpace
         {
             var (speed, sectors) = GetRandomSpeedAndSectors();
             Setup(speed, sectors);
-            
+
             wooshSound.Play();
             DOVirtual.DelayedCall(0.2f, () => waterSplash.Play());
 
             await canvasGroup.DOFade(1, fadeInDur).OnComplete(() => canvasGroup.blocksRaycasts = true);
-            
+
             reelingSound.Play();
 
             var currentSector = _sectorInstances.First();
@@ -72,11 +72,7 @@ namespace JamSpace
                 foreach (var sector in _sectorInstances)
                 {
                     var newRect = ((RectTransform)sector.transform).GetWorldRect();
-                    var oldRect = ((RectTransform)currentSector.transform).GetWorldRect();
-
-                    var newDist = Math.Abs(markerRect.center.x - newRect.center.x);
-                    var oldDist = Math.Abs(markerRect.center.x - oldRect.center.x);
-                    if (newDist < oldDist)
+                    if (newRect.xMin <= markerRect.center.x && markerRect.center.x <= newRect.xMax)
                     {
                         currentSector = sector;
                     }
@@ -130,7 +126,7 @@ namespace JamSpace
 
         private (float speed, List<FishingSectorView.FishingSector> sectors) GetRandomSpeedAndSectors()
         {
-            var sectorsInfo  = new List<FishingSectorView.FishingSector>();
+            var sectorsInfo = new List<FishingSectorView.FishingSector>();
             var sectorsCount = Random.Range(_settings.minMaxSectorCount.x, _settings.minMaxSectorCount.y);
             FishingSectorView.SectorType? previousType = null;
             for (var i = 0; i < sectorsCount; i++)
@@ -148,7 +144,7 @@ namespace JamSpace
                     var previousProp = propWithType.FirstOrDefault(p => p.type == previousType);
                     propWithType.Remove(previousProp);
                 }
-                
+
                 var c    = Random.Range(0, propWithType.Sum(p => p.prop));
                 var type = propWithType.First().type;
                 foreach (var p in propWithType)
