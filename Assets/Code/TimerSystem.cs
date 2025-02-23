@@ -26,7 +26,7 @@ namespace JamSpace
             while (!_cancel.IsCancellationRequested && this.IsAlive())
             {
                 var span = data.TimerToGameOver;
-                tmp.text = $"{span.Minutes}:{span.Seconds}";
+                tmp.text = $"{span.Minutes}:{span.Seconds} <sprite=\"stopwatch\" index=0>";
 
                 await UniTask.NextFrame(cancellationToken: _cancel.Token);
 
