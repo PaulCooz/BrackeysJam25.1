@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c13887d231640eca5ae97618f68997b, type: 3}
   m_Name: Level_3
   m_EditorClassIdentifier: 
-  fishToCollect: 20
+  fishToCollect: 10
   timerMinutes: 1
   fishZone:
     minMaxSpawnSec: {x: 10, y: 14}
@@ -28,3 +28,5 @@ MonoBehaviour:
     timeDecIncSec: {x: -10, y: 15}
     proportionOfSpeed: 250
     chanceOfDecreaseSpeed: 60
+  minMaxSpawnMeteorInterval: {x: 5, y: 10}
+  minMaxSpawnMeteorSpeed: {x: 1, y: 1.5}

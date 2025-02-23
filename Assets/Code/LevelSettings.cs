@@ -13,5 +13,9 @@ namespace JamSpace
         public FishZoneSystem.Settings fishZone;
         [SerializeField]
         public FishingMechanics.FishingHookSettings fishingHook;
+        [SerializeField]
+        public Vector2 minMaxSpawnMeteorInterval;
+        [SerializeField]
+        public Vector2 minMaxSpawnMeteorSpeed;
     }
 }

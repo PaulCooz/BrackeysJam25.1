@@ -4,6 +4,6 @@ namespace JamSpace
 {
     public interface IEnemy
     {
-        public void Attack(Vector3 worldPositionToAttack);
+        public void Attack(Vector3 worldPositionToAttack, float speed);
     }
 }

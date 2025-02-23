@@ -13,7 +13,7 @@ namespace JamSpace.Implementation
         [SerializeField] private Transform explosionVfx;
         [SerializeField] private SpriteRenderer shadow;
         
-        public void Attack(Vector3 worldPositionToAttack)
+        public void Attack(Vector3 worldPositionToAttack, float speed)
         {
             transform.position = worldPositionToAttack;
             
@@ -23,7 +23,7 @@ namespace JamSpace.Implementation
             
             DOTween.Sequence()
                 .Append(rigidBody
-                    .DOMove(endValue: worldPositionToAttack, duration: Random.Range(1f, 1.5f))
+                    .DOMove(endValue: worldPositionToAttack, duration: speed)
                     .SetEase(Ease.Linear))
                 .AppendCallback(() => explosionVfx.gameObject.SetActive(true))
                 .AppendInterval(0.1f)

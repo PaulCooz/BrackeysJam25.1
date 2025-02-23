@@ -28,3 +28,5 @@ MonoBehaviour:
     timeDecIncSec: {x: 0, y: 0}
     proportionOfSpeed: 0
     chanceOfDecreaseSpeed: 0
+  minMaxSpawnMeteorInterval: {x: 480, y: 480}
+  minMaxSpawnMeteorSpeed: {x: 1, y: 1.5}

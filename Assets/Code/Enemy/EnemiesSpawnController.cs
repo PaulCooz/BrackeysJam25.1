@@ -14,10 +14,6 @@ namespace JamSpace
         private List<GameObject> enemiesPrefabs = new ();
         [SerializeField]
         private Transform PlayerTarget;
-        [SerializeField]
-        private float MinSpawnInterval;
-        [SerializeField]
-        private float MaxSpawnInterval;
 
         private CancellationTokenSource _cancel;
 
@@ -31,12 +27,14 @@ namespace JamSpace
         {
             while (!_cancel.IsCancellationRequested && this.IsAlive())
             {
-                var spawnInterval = Random.Range(MinSpawnInterval, MaxSpawnInterval);
+                var settings      = GameManager.Instance.LevelSettings;
+                var spawnInterval = Random.Range(settings.minMaxSpawnMeteorInterval.x, settings.minMaxSpawnMeteorInterval.y);
                 await UniTask.WaitForSeconds(spawnInterval, cancellationToken: _cancel.Token);
-                
+
+                var speed = Random.Range(settings.minMaxSpawnMeteorSpeed.x, settings.minMaxSpawnMeteorSpeed.y);
                 Instantiate(enemiesPrefabs[Random.Range(0, enemiesPrefabs.Count)], new Vector3(0, 0, EnemyLayer), Quaternion.identity)
                     .GetComponent<IEnemy>()
-                    .Attack(worldPositionToAttack: new Vector3(PlayerTarget.position.x, PlayerTarget.position.y, EnemyLayer));
+                    .Attack(worldPositionToAttack: new Vector3(PlayerTarget.position.x, PlayerTarget.position.y, EnemyLayer), speed);
             }
             _cancel = null;
         }
