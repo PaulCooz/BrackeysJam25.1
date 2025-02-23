@@ -132,15 +132,23 @@ namespace JamSpace
         {
             var sectorsInfo  = new List<FishingSectorView.FishingSector>();
             var sectorsCount = Random.Range(_settings.minMaxSectorCount.x, _settings.minMaxSectorCount.y);
+            FishingSectorView.SectorType? previousType = null;
             for (var i = 0; i < sectorsCount; i++)
             {
-                var propWithType = new[]
+                var propWithType = new List<(int prop, FishingSectorView.SectorType type)>
                 {
                     (prop: _settings.proportionOfSpace, type: FishingSectorView.SectorType.Space),
                     (prop: _settings.proportionOfFish, type: FishingSectorView.SectorType.Fish),
                     (prop: _settings.proportionOfSpeed, type: FishingSectorView.SectorType.Speed),
                     (prop: _settings.proportionOfTime, type: FishingSectorView.SectorType.Time),
                 };
+
+                if (previousType != null)
+                {
+                    var previousProp = propWithType.FirstOrDefault(p => p.type == previousType);
+                    propWithType.Remove(previousProp);
+                }
+                
                 var c    = Random.Range(0, propWithType.Sum(p => p.prop));
                 var type = propWithType.First().type;
                 foreach (var p in propWithType)
@@ -165,9 +173,20 @@ namespace JamSpace
                 var width = Random.Range(_settings.minMaxSectorWidth.x, _settings.minMaxSectorWidth.y);
 
                 sectorsInfo.Add(new FishingSectorView.FishingSector(type, value, width));
+
+                previousType = type;
             }
 
             var markerSpeed = Random.Range(100f, 1000f);
+
+            var haveFishToCatch = sectorsInfo.Any(s => s is { Type: FishingSectorView.SectorType.Fish, Value: > 0 });
+
+            if (!haveFishToCatch)
+            {
+                sectorsInfo[Random.Range(0, sectorsInfo.Count)] = new FishingSectorView.FishingSector(
+                    FishingSectorView.SectorType.Fish, 1,
+                    Random.Range(_settings.minMaxSectorWidth.x, _settings.minMaxSectorWidth.y));
+            }
 
             return (markerSpeed, sectorsInfo);
         }
