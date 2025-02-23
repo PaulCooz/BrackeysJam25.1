@@ -519,7 +519,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Teemo Basic emote animations sprite sheet_18
+      name: emote_7_0
       rect:
         serializedVersion: 2
         x: 0
@@ -541,7 +541,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Teemo Basic emote animations sprite sheet_19
+      name: emote_7_1
       rect:
         serializedVersion: 2
         x: 32
@@ -844,8 +844,6 @@ TextureImporter:
       Teemo Basic emote animations sprite sheet_13: -699877322
       Teemo Basic emote animations sprite sheet_16: -963734729
       Teemo Basic emote animations sprite sheet_17: 1801212755
-      Teemo Basic emote animations sprite sheet_18: 872204494
-      Teemo Basic emote animations sprite sheet_19: -1011337144
       Teemo Basic emote animations sprite sheet_28: 913393996
       Teemo Basic emote animations sprite sheet_31: -323182938
       emote_0_0: 291665660
@@ -868,6 +866,8 @@ TextureImporter:
       emote_3_3: 1262369138
       emote_5_0: 1478985995
       emote_5_1: -1631978324
+      emote_7_0: 872204494
+      emote_7_1: -1011337144
       emote_8_0: -1349424570
       emote_8_1: 865425831
       emote_9_0: -1517873661
