@@ -76,25 +76,25 @@ namespace JamSpace
             if (_currentTask.HasValue && !_currentTask.Value.Status.IsCompleted())
                 return;
 
-            var mouse                 = Mouse.current;
-            var worldClickPos         = _camera.ScreenToWorldPoint(mouse.position.ReadValue());
+            var pointer               = Pointer.current;
+            var worldClickPos         = _camera.ScreenToWorldPoint(pointer.position.ReadValue());
             var wasFishingAsClick     = false;
             var moveDirection         = (float?)null;
             var distFromClickToPlayer = worldClickPos.DistXY(transform.position);
             if (distFromClickToPlayer < 1.5f) // input on player
             {
-                if (mouse.leftButton.wasPressedThisFrame)
+                if (pointer.press.wasPressedThisFrame)
                 {
                     _clickBeginOnPlayer = true;
                     boatSprite.DOKill();
                     boatSprite.DOColor((0.7f * Color.white).WithA(1f), 0.3f);
                 }
-                if (mouse.leftButton.wasReleasedThisFrame)
+                if (pointer.press.wasReleasedThisFrame)
                     wasFishingAsClick = _clickBeginOnPlayer;
             }
-            if (!_clickBeginOnPlayer && mouse.leftButton.isPressed)
+            if (!_clickBeginOnPlayer && pointer.press.isPressed)
                 moveDirection = Math.Clamp(worldClickPos.x - transform.position.x, -1, +1);
-            if (mouse.leftButton.wasReleasedThisFrame)
+            if (pointer.press.wasReleasedThisFrame)
             {
                 if (_clickBeginOnPlayer)
                 {
@@ -126,7 +126,7 @@ namespace JamSpace
                 var caughtAnimDur  = spriteAnimator.GetDuration("caught");
                 _currentTask = _fishingMechanics.Run(
                     castingAnimDur, caughtAnimDur,
-                    () => fishingInput.WasPerformedThisFrame() || mouse.leftButton.wasReleasedThisFrame || !manager.Running
+                    () => fishingInput.WasPerformedThisFrame() || pointer.press.wasReleasedThisFrame || !manager.Running
                 ).ContinueWith(result =>
                 {
                     if (!manager.Running)
